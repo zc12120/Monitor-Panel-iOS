@@ -6,3 +6,4 @@ build/
 .env
 screenshots/
 !docs/screenshots/
+!android/screenshots/

@@ -1,5 +1,7 @@
 # Monitor Panel iOS
 
+> **Android 移植版**：本 fork 新增了 [原生 Android 工程](android/README.md)，按 iOS 1.0.1 的页面和功能移植，支持 Android 8.0 及以上。前往 [Android 构建记录](https://github.com/zc12120/Monitor-Panel-iOS/actions/workflows/android.yml) 下载 APK 构建产物。iOS 源码保留在仓库根目录。
+
 [English](README.md) | **简体中文** | [繁體中文](README.zh-TW.md) | [한국어](README.ko.md) | [日本語](README.ja.md)
 
 一款适用于 iPhone 和 iPad 的原生服务器监控应用。统一接入 Komari、哪吒和 DStatus 面板，随时查看服务器运行状态，并在手机上管理 Komari 节点。

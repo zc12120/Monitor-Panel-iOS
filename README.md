@@ -1,5 +1,7 @@
 # Monitor Panel iOS
 
+> **Android port in this fork:** See [android/README.md](android/README.md) for the native Android 8.0+ port of the original iOS 1.0.1 interface and features. Download APK artifacts from [Build Android APK](https://github.com/zc12120/Monitor-Panel-iOS/actions/workflows/android.yml). The iOS project remains at the repository root.
+
 **English** | [简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md) | [한국어](README.ko.md) | [日本語](README.ja.md)
 
 A native server monitoring app for iPhone and iPad. Connect your Komari, Nezha, and DStatus panels in one place, check server health at a glance, and manage Komari nodes on the go.

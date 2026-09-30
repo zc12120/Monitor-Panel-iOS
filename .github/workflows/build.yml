@@ -3,6 +3,7 @@ on:
   push:
     branches: ['**']
     tags: ['v*']
+    paths-ignore: ['android/**', '.github/workflows/android.yml']
   workflow_dispatch:
 permissions:
   contents: read
