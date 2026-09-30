@@ -28,7 +28,9 @@ class PortContractTest {
         assertThrows(ApiError::class.java) { Api.rpcResult(parse("""{"jsonrpc":"2.0","id":"one","result":1,"error":{"code":-1,"message":"bad"}}"""),"one") }
     }
     @Test fun authPrefixesDeploymentPrefixAndNoRedirects() = runTest {
-        val server = MockWebServer(); server.start(InetAddress.getByName("::1"),0)
+        val loopback = InetAddress.getLoopbackAddress()
+        val host = requireNotNull(loopback.hostAddress)
+        val server = MockWebServer(); server.start(loopback,0)
         try {
             server.dispatcher = object: Dispatcher() {
                 override fun dispatch(request: RecordedRequest): MockResponse {
@@ -36,7 +38,8 @@ class PortContractTest {
                     return MockResponse().setBody(json("jsonrpc" to "2.0","id" to id,"result" to emptyList<J>()).toString())
                 }
             }
-            val api = Api(Panel(name = "Test",address = server.url("/prefix").toString(),allowHTTP = true),"dummy-key",OkHttpClient.Builder().proxy(java.net.Proxy.NO_PROXY).build())
+            val address = server.url("/prefix").newBuilder().host(host).build().toString()
+            val api = Api(Panel(name = "Test",address = address,allowHTTP = true),"dummy-key",OkHttpClient.Builder().proxy(java.net.Proxy.NO_PROXY).build())
             api.rpc("admin:listClients")
             val request = server.takeRequest(2,TimeUnit.SECONDS)!!
             assertEquals("/prefix/api/rpc2",request.path); assertEquals("Bearer dummy-key",request.getHeader("Authorization"))
@@ -50,10 +53,13 @@ class PortContractTest {
         } finally { server.shutdown() }
     }
     @Test fun cancelledTransportDoesNotBecomeCredentialBearingError() = runTest {
-        val server = MockWebServer(); server.start(InetAddress.getByName("::1"),0)
+        val loopback = InetAddress.getLoopbackAddress()
+        val host = requireNotNull(loopback.hostAddress)
+        val server = MockWebServer(); server.start(loopback,0)
         try {
             server.enqueue(MockResponse().setSocketPolicy(SocketPolicy.NO_RESPONSE))
-            val api = Api(Panel(name = "Test",address = server.url("/").toString(),allowHTTP = true),"dummy-key",OkHttpClient.Builder().proxy(java.net.Proxy.NO_PROXY).build())
+            val address = server.url("/").newBuilder().host(host).build().toString()
+            val api = Api(Panel(name = "Test",address = address,allowHTTP = true),"dummy-key",OkHttpClient.Builder().proxy(java.net.Proxy.NO_PROXY).build())
             val job = launch(Dispatchers.Default) { api.rpc("common:getNodesLatestStatus") }
             withContext(Dispatchers.IO) { assertNotNull(server.takeRequest(2,TimeUnit.SECONDS)) }
             job.cancelAndJoin(); assertTrue(job.isCancelled)
